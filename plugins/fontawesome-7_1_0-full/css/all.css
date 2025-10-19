@@ -3,12 +3,23 @@
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  * Copyright 2025 Fonticons, Inc.
  */
+:host,:root {
+    --fa-primary-color: #1e90ff;
+    --fa-secondary-color: #e0e0e0;
+    --fa-primary-opacity: 1;
+    --fa-secondary-opacity: .4;
+    --fa-display:inline-block;
+    --fa-style-family:"Font Awesome 7 Pro";
+    --fa-family:"Font Awesome 7 Pro";
+    --_fa-family: var(--fa-family, var(--fa-style-family, "Font Awesome 7 Pro"));
+}
+
 .fa, .fa-brands, .fa-chisel, .fa-classic, .fa-duotone, .fa-etch, .fa-jelly, .fa-jelly-duo, .fa-jelly-fill, .fa-light, .fa-notdog, .fa-notdog-duo, .fa-regular, .fa-semibold, .fa-sharp, .fa-sharp-duotone, .fa-slab, .fa-slab-press, .fa-solid, .fa-thin, .fa-thumbprint, .fa-utility, .fa-utility-duo, .fa-utility-fill, .fa-whiteboard, .fab, .facr, .fad, .fadl, .fadr, .fadt, .faes, .fajdr, .fajfr, .fajr, .fal, .fands, .fans, .far, .fas, .fasdl, .fasdr, .fasds, .fasdt, .fasl, .faslpr, .faslr, .fasr, .fass, .fast, .fat, .fatl, .faudsb, .faufsb, .fausb, .fawsb {
     --_fa-family: var(--fa-family, var(--fa-style-family, "Font Awesome 7 Pro"));
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     display: var(--fa-display, inline-block);
-    font-family: var(--_fa-family);
+    font-family: var(--_fa-family), serif;
     font-feature-settings: normal;
     font-style: normal;
     font-synthesis: none;
