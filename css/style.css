@@ -3,42 +3,6 @@
     --navy: #001f3f;
 }
 
-@font-face {
-    font-family: 'SolaimanLipi';
-    src: url('/fonts/SolaimanLipi.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Bornomala';
-    src: url('../fonts/Bornomala-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Bornomala';
-    src: url('../fonts/Bornomala-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-}
-
-body {
-    font-family: 'Times New Roman', 'SolaimanLipi', serif;
-}
-
-
-body {
-    font-family: 'Times New Roman', serif;
-}
-
-/* Bangla text block */
-.bangla-text, .ff-bn, [lang="bn"] {
-    font-family: 'Times New Roman', 'SolaimanLipi', 'Bornomala', sans-serif;
-    line-height: 1.6;
-}
-
 .dropdown-item.active,
 .dropdown-item:active {
     color: #fff;
