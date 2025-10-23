@@ -62,12 +62,12 @@
 }
 
 body {
-    font-family: 'Times New Roman', 'solaimanlipi', serif;
+    font-family: 'Times New Roman', 'solaimanlipi', serif !important;
 }
 
 /* Bangla text block */
 .bangla-text, .ff-bn, [lang="bn"] {
-    font-family: 'Times New Roman', 'solaimanlipi', 'Bornomala', sans-serif;
+    font-family: 'Times New Roman', 'solaimanlipi', 'Bornomala', sans-serif !important;
     line-height: 1.6;
 }
 
