@@ -1,0 +1,34 @@
+.machedCells{background: dodgerblue !important; color: darkblue !important;}
+.bn{min-width:100px;border-radius: 6px;height: 30px;font-weight: bold;margin:2px;}
+.bn-success{background-image: linear-gradient(lightgreen, #ddc);border-color: darkgreen;color: darkgreen;}
+.bn-success:hover{background-image: linear-gradient( #ddc, lightgreen );}
+.bn-danger {color: darkred;border-color:darkred;background-image: linear-gradient(red, yellow);}
+.bn-danger:hover {background-image: linear-gradient(yellow, red);}
+.bn-info{background-image: linear-gradient(#2cb5e8, #ddd);border-color: #0332c1;color: navy;}
+.bn-info:hover{background-image: linear-gradient( #ddd, #2cb5e8 );}
+.inp{min-width:200px;height:30px;font-weight: bold;border-radius:6px;padding-left:10px;padding-right:10px;text-align:center;}
+.inp-success{background-image:linear-gradient(lightgreen,#ddc);border-color:darkgreen;color:darkgreen;}
+.inp-success:hover{background-image:linear-gradient(#ddc,lightgreen);}
+.inp-info{background-image:linear-gradient(#2cb5e8,#ddd);border-color:navy;color:naby;}
+.inp-info:hover{background-image:linear-gradient(#ddd,#2cb5e8);}
+.inp-danger{background-image:linear-gradient(red,yellow);border-color:darkred;color:darkred;}
+.inp-danger:hover{background-image:linear-gradient(yellow,red);}
+.d{min-width:200px;min-height:15px;font-weight:bold;border-radius:6px;padding:5px;text-align:center;margin: auto;}
+.d-success{background-image:linear-gradient(#009900,#e6ffe6,#33ff33);color:darkgreen;border:0.5px solid darkgreen;}
+.d-info{background-image:linear-gradient(#0099ff,#ccffff,#66ffff);color:naby;border:0.5px solid naby;}
+.d-danger{background-image:linear-gradient(red,yellow,#ff704d);color:darkred;border:0.5px solid darkred;}
+.close{ float: right !important;background: border-box !important;border: 0 !important;padding-left: 1px !important; }
+
+
+.container {/* display: block; */position: relative;padding-left: 35px;margin-bottom: 12px;cursor: pointer;font-size: 22px;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
+/* Hide the browser's default checkbox */
+.container input {position: absolute;opacity: 0;cursor: pointer;height: 0;width: 0;}
+/* Create a custom checkbox */
+.checkmark {position: absolute;top: 0;left: 0;height: 30px;width: 30px;background-color: #eee;border: 3px solid black;}
+.container:hover input ~ .checkmark {background-color: #ccc;}
+.container input:checked ~ .checkmark {background-color: #2196F3;border: 0px solid black;}
+.checkmark:after {content: "";position: absolute;display: none;}
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {display: block;}
+/* Style the checkmark/indicator */
+.container .checkmark::after {left: 10px;top: 5px;width: 11px;height: 17px;border: solid white;border-width: 0px 4px 4px 0px;-webkit-transform: rotate(45deg);transform: rotate(45deg);}

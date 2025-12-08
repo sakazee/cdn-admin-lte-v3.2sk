@@ -1,0 +1,16 @@
+body {
+    background: white;
+}
+
+h2 {
+    margin: 20px 0;
+}
+
+.pagination {
+    padding: 10px 0;
+}
+
+.pagination a {
+    border: 1px solid grey;
+    padding: 2px 5px;
+}

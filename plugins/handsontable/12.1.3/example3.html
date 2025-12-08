@@ -1,0 +1,185 @@
+
+
+<!-- <script src="http://dev.nst.com/assets/common/handsontable/12.1.3/jquery-3.6.1.min.js"></script> -->
+<script src="http://dev.nst.com/assets/adminlte/plugins/jquery/jquery.min.js"></script>
+<script src="http://dev.nst.com/assets/common/handsontable/12.1.3/handsontable.full.js"></script>
+<!-- <script src="http://dev.nst.com/assets/common/handsontable/handsontable.full.min.js"></script> -->
+<link href="http://dev.nst.com/assets/common/handsontable/handsontable.full.min.css" rel="stylesheet">
+
+
+<button class="bn bn-success" id="Edit">Save Change</button>
+<input class="inp inp-info" type="text" id="search_field" title="Please, type anything for search">
+<label class="container" title="Check The Box For Searching Exact Match"> Full Match
+	<input type="checkbox" id="check" />
+	<span class="checkmark"> </span>
+</label>
+
+<div id="show" class=""></div>
+<div id="table" class="hot handsontable"></div>
+
+
+<script> 
+	var summaryTypes = ["sum", "min", "max", "count", "average"];
+	var hotElement = document.querySelector("#table");
+	var hotElementContainer = hotElement.parentNode;
+	
+	var hotSettings={
+		fillHandle:true,manualColumnResize:true,manualColumnMove:true,fixedColumnsLeft:2,
+		manualColumnFreeze:true,outsideClickDeselects:false,selectionMode:'single',stretchH:'all',
+		colWidths:100,width:'auto',height:300,allowInsertColumn:true,collapsibleColumns:false,multiColumnSorting:{indicator: true},
+		autoColumnSize:{samplingRatio: 15},headerTooltips:{rows: true,columns: true,onlyTrimmed: false},
+		hiddenColumns:{columns:[],indicators: true},autoWrapRow:true,
+		fixedRowsTop:0,fixedRowsBottom:0,hiddenRows:{rows: [],indicators: true},
+		manualRowResize:true,rowHeaders:true,manualRowMove:true,
+		rowHeights:15,bindRowsWithHeaders:'strict',contextMenu:true,filters:true,
+		dropdownMenu:true,mergeCells:true,exportFile:true,
+		licenseKey:'non-commercial-and-evaluation',
+		colHeaders:['admission_roll','name','grand_total','average','letter_grade','position_in_group'],
+		columns:[
+			{data:'admission_roll',width:'auto',editor:false,readOnly:true},
+			{data:'name',width:'auto',editor:false,readOnly:true},
+			{data:'grand_total',width:'auto',type:'numeric'},
+			{data:'average',width:'auto',type:'numeric'},
+			{data:'letter_grade',width:'auto',type:'numeric'},
+			{data:'position_in_group',width:'auto',type:'numeric'}
+		],
+		data:[
+			{'admission_roll':1,'name':'tamim','grand_total':100,'average':100,'letter_grade':'A+','position_in_group':'1'},
+			{'admission_roll':1,'name':'tami2m','grand_total':50,'average':50,'letter_grade':'A-','position_in_group':'2'},
+			{'admission_roll':1,'name':'tam3im','grand_total':10,'average':10,'letter_grade':'B','position_in_group':'3'},
+		],
+		maxRows:30
+	};
+	
+	var hot = new Handsontable(hotElement, hotSettings);
+	//console.log(hot);
+	var queryResult,replace,Rinstance="";
+	document.getElementById("Edit").addEventListener("click", function(event) {
+		
+		var myDataArr = hot.getData();
+		var myDataStr = JSON.stringify(myDataArr);
+		var myDataObj = {"input":toObject(myDataArr)};
+		var myDataKey = JSON.stringify({ "input": myDataStr });
+		
+		console.log(myDataObj);
+		//return false;
+		var url = "http://dev.nst.com/Education/MarksEntry/MarksEntry/excelEdit/7/3/1/1/3/0";
+		if(url){
+			$.ajax({
+				url : url,
+				type: "POST",
+				data: myDataKey,
+				dataType: "json",
+				success:function(response) {
+					if(response.success==true){
+						DivResult(response.msg, true, "success");
+					}else{
+						DivResult(response.msg, false, "danger");
+					}
+				}
+			});
+		}else{
+			alert("Url Not Set !!!");
+		}
+	});
+		
+	var SearchField = document.getElementById("search_field");
+	var ExactMatch = document.getElementById("check");
+	Handsontable.dom.addEvent( SearchField, "keyup", function (event) {
+		searchResultCount = 0;
+		search = hot.getPlugin("search");
+		queryResult = search.query(this.value);
+		if(searchResultCount>1){
+			text = " Results Matched";
+		}else{
+			text = " Result Matched";
+		}
+		DivResult(searchResultCount.toString()+text, false, "success");
+		if( searchResultCount =="" ){
+			DivResult(searchResultCount.toString()+text, true, "danger");
+		}
+		hot.render();
+	});
+	function searchResultCounter(instance, row, col, value, result){
+		const DEFAULT_CALLBACK = function(instance, row, col, data, testResult) {
+			if( ExactMatch.checked == false ){
+				instance.getCellMeta(row, col).isSearchResult = testResult;
+			}else if( ExactMatch.checked == true ){
+				if( SearchField.value == value){
+					instance.getCellMeta(row, col).isSearchResult = testResult;
+				}else{
+					instance.getCellMeta(row, col).isSearchResult = false;
+				}
+			}
+			Rinstance = [instance, row, col, data];
+		};
+		if( ExactMatch.checked == false ){
+			DEFAULT_CALLBACK.apply(this, arguments);
+			if (result) {
+				searchResultCount++;
+			}
+		}else if( ExactMatch.checked == true ){
+			if( SearchField.value == value){
+				if (result) {
+					searchResultCount++;
+				}
+				DEFAULT_CALLBACK.apply(this, arguments);
+			}else{
+				DEFAULT_CALLBACK.apply(this, arguments);
+			}
+		}
+	}
+	hot.updateSettings({
+		search: {
+			callback: searchResultCounter,
+			searchResultClass:"machedCells"
+		}
+	});
+	function DivResult(msg, time=true, type="success") {
+		ResultDiv = document.getElementById("show");
+		if( type ){
+			$("#show").removeClass(ResultDiv.className);
+			$("#show").addClass("d d-"+type);
+		}
+		if(msg){
+			ResultDiv.style.display = "block";
+			var html = '<button type="button" onclick="closeMsg()" class="close" data-dismiss="alert">×</button><strong><i class="glyphicon glyphicon-info-sign"> </i>'+msg.toString()+'</strong>';
+			//ResultDiv.innerText = msg.toString();
+			ResultDiv.innerHTML = html;
+			//console.log(html);
+		}
+		if( time == true ){
+			setTimeout(function () {
+				ResultDiv.style.display = "none";
+				ResultDiv.innerHTML = "";
+			}, 5000);
+		}
+	}
+	function closeMsg(){
+		var ResultDiv = document.getElementById("show");
+		ResultDiv.innerHTML="hi";
+		ResultDiv.style.display = "none";
+	}
+	function function_SummaryOfCols(summaryTypes) {
+		var configArray = [];
+		for (var i = 0; i < summaryTypes.length; i++) {
+			configArray.push({
+				sourceColumn: i,
+				destinationRow: 0,
+				destinationColumn: i,
+				type: summaryTypes[i],
+				forceNumeric: true,
+				readOnly: true
+			});
+		}
+		return configArray;
+	}
+	function toObject(arr) {
+		var rv = {};
+		for (var i = 0; i < arr.length; ++i){
+			rv[i] = arr[i];
+		}
+		return rv;
+	}
+	$(document).ready(function(){  });
+</script>

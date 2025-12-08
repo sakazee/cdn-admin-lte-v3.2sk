@@ -1,0 +1,188 @@
+
+<script src="jquery-3.6.1.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script> -->
+<script src="handsontable.full.js"></script>
+<link type="text/css"rel="stylesheet"href="handsontable.full.min.css">
+
+
+<style>
+.my-custom-search-result-class{
+	background-color:red;
+}
+</style>
+
+<input type="text" id="search_field2">
+
+<div id="example2" class="hot handsontable htColumnHeaders"></div>
+
+<button id="export-file">Download CSV</button>
+
+<button id="export-file-bolb">Export BOLB</button>
+
+<button id="export-file-string">Export String</button>
+
+<output class="console" id="output">0 results</output>
+
+
+
+<script>
+const container = document.querySelector('#example2');
+const searchField = document.querySelector('#search_field2');
+const output = document.querySelector('#output');
+const button = document.querySelector('#export-file');
+const button2 = document.querySelector('#export-file-bolb');
+const button3 = document.querySelector('#export-file-string');
+
+let searchResultCount = 0;
+
+const DEFAULT_CALLBACK = function(instance, row, col, data, testResult) {
+	instance.getCellMeta(row, col).isSearchResult = testResult;
+};
+const DEFAULT_QUERY_METHOD = function(query, value) {
+	if (isUndefined(query) || query === null || !query.toLowerCase || query.length === 0) {
+		return false;
+	}
+	if (isUndefined(value) || value === null) {
+		return false;
+	}
+	return value.toString().toLowerCase().indexOf(query.toLowerCase()) !== -1;
+};
+
+const onlyExactMatch = function(queryStr, value) {
+  return queryStr.toString() === value.toString();
+};
+
+
+// define your custom callback function
+function searchResultCounter(instance, row, col, value, result) {
+	DEFAULT_CALLBACK.apply(this, arguments);
+
+	if (result) {
+		searchResultCount++;
+	}
+}
+
+function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {
+	Handsontable.renderers.TextRenderer.apply(this, arguments);
+	td.style.fontWeight = 'bold';
+	td.style.color = 'green';
+	td.style.background = '#CEC';
+}
+
+function negativeValueRenderer(instance, td, row, col, prop, value, cellProperties) {
+	Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+	// if the row contains a negative number
+	if (parseInt(value, 10) < 0) {
+		// add class 'make-me-red'
+		td.className = 'make-me-red';
+	}
+
+	if (!value || value === '') {
+		td.style.background = '#EEE';
+
+	} else {
+		if (value === 'Nissan') {
+			td.style.fontStyle = 'italic';
+		}
+
+		td.style.background = '';
+	}
+}
+
+// maps function to a lookup string
+Handsontable.renderers.registerRenderer('negativeValueRenderer', negativeValueRenderer);
+
+const data = [
+	['Tesla', 'Nissan', 'Toyota', 'Honda'],
+	['Tesla', -2017, 'black', 'black'],
+	['Nissan', 2018, 'blue', 'blue'],
+	['Chrysler', 2019, 'yellow', 'black'],
+	['Volvo', 2020, 'yellow', 'gray']
+];
+
+const hot = new Handsontable(container, {
+	data,
+	colHeaders: true,
+	rowHeaders: true,
+	// enable the `Search` plugin
+	search: {
+		// add your custom CSS class
+		searchResultClass: 'my-custom-search-result-class',
+		// add your custom query method
+		queryMethod: onlyExactMatch,
+		// add your custom callback function
+		callback: searchResultCounter
+	},
+	// render Handsontable from the right to the left
+	layoutDirection: 'ltr',//'rtl',
+	// load an RTL language (e.g., Arabic)
+	<!-- language: 'ar-AR', -->
+	// enable a few options that exemplify the layout direction
+	dropdownMenu: true,
+	height: 'auto',
+	licenseKey: 'non-commercial-and-evaluation'
+});
+
+searchField.addEventListener('keyup', function(event) {
+	searchResultCount = 0;
+  
+	const search = hot.getPlugin('search');
+	const queryResult = search.query(event.target.value);
+
+	console.log(queryResult);
+	
+	output.innerText = `${searchResultCount} results`;
+	
+	hot.render();
+});
+
+
+const exportPlugin = hot.getPlugin('exportFile');
+
+button.addEventListener('click', () => {
+	exportPlugin.downloadFile('csv', {
+		bom: false,
+		columnDelimiter: ',',
+		columnHeaders: false,
+		exportHiddenColumns: true,
+		exportHiddenRows: true,
+		fileExtension: 'csv',
+		filename: 'Handsontable-CSV-file_[YYYY]-[MM]-[DD]',
+		mimeType: 'text/csv',
+		rowDelimiter: '\r\n',
+		rowHeaders: true
+	});
+});
+
+button2.addEventListener('click', () => {
+	const exportedBlob = exportPlugin.exportAsBlob('csv', {
+		bom: false,
+		columnDelimiter: ',',
+		columnHeaders: false,
+		exportHiddenColumns: true,
+		exportHiddenRows: true,
+		mimeType: 'text/csv',
+		rowDelimiter: '\r\n',
+		rowHeaders: true
+	});
+
+	console.log(exportedBlob);
+});
+
+
+button3.addEventListener('click', () => {
+	const exportedString = exportPlugin.exportAsString('csv', {
+		bom: false,
+		columnDelimiter: ',',
+		columnHeaders: false,
+		exportHiddenColumns: true,
+		exportHiddenRows: true,
+		rowDelimiter: '\r\n',
+		rowHeaders: true
+	});
+
+	console.log(exportedString);
+});
+
+</script>
