@@ -96,3 +96,12 @@ fieldset {
     border-top: 2px solid #dee2e6;
     margin: 25px 0;
 }
+
+
+.modal-custom-xxl { max-width: 1400px; }          /* fixed max width */
+@media (min-width: 1200px) {                     /* adjust breakpoint as needed */
+  .modal-custom-xxl { max-width: 1600px; }       /* larger desktops */
+}
+@media (max-width: 576px) {
+  .modal-custom-xxl { max-width: 100%; margin: 0 0.5rem; }
+}
